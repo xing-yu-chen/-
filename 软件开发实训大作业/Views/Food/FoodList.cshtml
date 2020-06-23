@@ -1,0 +1,304 @@
+﻿
+@{
+    ViewData["Title"] = "菜单列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app" style="margin-top: 50px;" class="row-fluid">
+    <div class="span12">
+        <div class="well well_condition well-con" style="margin-top: 30px; margin-bottom: 13px;position: relative;">
+            <div class="span6">
+                <div class="btn-group">
+                    <a class="btn again-btn taps-p">
+                        <span class="name-address">菜单列表</span>
+                    </a>
+                </div> »
+                &nbsp;
+            </div>
+
+            <div class="span6 order_person dropdown" style="text-align:right;">
+                <div style="text-align:left;padding-top: 5px; ">
+                    <ul class="tlist pull-right">
+                        <li id="zonghe0"><a href="#" class="selected">综合<i></i></a></li>
+                        <li id="yuyue0"><a href="#">预约量<i></i></a></li>
+                        <li id="jiage0"><a href="#">价格<i></i></a></li>
+                        <li>
+                            <button class="btn btn-success" @@click="add()">上架新菜品</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+        <div class="well well_person">
+            <table class="table table-responsive table-bordered table-hover">
+                <tr>
+                    <th>序号</th>
+                    <th>菜名</th>
+                    <th>介绍</th>
+                    <th>单价</th>
+                    <th>上架时间</th>
+                    <th>库存</th>
+                    <th>分类</th>
+                    <th>图片</th>
+                    <th>修改</th>
+                </tr>
+                <tr v-for="data in dataList">
+                    <td>{{data.id}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.description}}</td>
+                    <td>{{data.price | formatCurrency}}</td>
+                    <td>{{data.createTime | dateFormat}}</td>
+                    <td>{{data.stockCount}}</td>
+                    <td>{{data.type}}</td>
+                    <td><img :src="data.image" width="100" height="100" /></td>
+                    <td>
+                        <button class="btn btn-success" @@click="edit(data)">编辑</button>
+                        <button class="btn btn-danger" @@click="deleteData(data.id)">删除</button>
+                    </td>
+                </tr>
+            </table>
+
+            <pagination v-model="page" :total="total" :page-size="pageSize" @@input="pageChange()"></pagination>
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">名称:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm" v-model="model.Name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">介绍:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm" v-model="model.Description" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">价格:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm" v-model="model.Price" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">库存:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm" v-model="model.StockCount" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">类别:</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control input-sm" v-model="model.Type">
+                                        <option>荤菜</option>
+                                        <option>素菜</option>
+                                        <option>酒水</option>
+                                        <option>水果</option>
+                                        <option>点心</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">图片:</label>
+                                <div class="col-sm-4">
+                                    <img width="100" height="100" :src="model.Image" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="control-label" style="cursor: pointer "
+                                           for="imageUpload">上传</label>
+                                    <div class="hidden">
+                                        <file-upload ref="imageUpload"
+                                                     name="imageUpload"
+                                                    @@change="checkFile"
+                                                     :auto-save="true"
+                                                     :save-url="uploadUrl"
+                                                     @@complete="afterUploaded"></file-upload>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" @@click="close()">关闭</button>
+                        <button type="button" class="btn btn-primary" @@click="submit()">提交</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            dataList: [],
+
+            pageSize: 2,
+            page: 1,
+            total: 0,
+
+            backup: "",
+            title: "",
+
+            model: {
+                Id: 0,
+                Name: "",
+                Description: "",
+                Price: 0,
+                StockCount: 0,
+                Type: "",
+                Image: ""
+            },
+
+            uploadUrl: "/Food/UploadFile",
+        },
+        mounted() {
+            this.bindData();
+        },
+
+        methods: {
+            bindData() {
+                var queryString = `pageNo=${this.page}&pageSize=${this.pageSize}`
+                axios.get(`/Food/GetFoodMenus?${queryString}`, {})
+                    .then(res => {
+                        if (res.data.status = true) {
+                            this.dataList = res.data.data;
+                            this.total = res.data.total;
+                        }
+                        else {
+                            alert("获取数据失败！");
+                        }
+                  })
+                  .catch((e) => {
+                    console.log('获取数据失败!');
+                  });
+            },
+
+            add() {
+                this.title = "添加菜品";
+
+                $("#myModal").modal('show');
+            },
+
+            close() {
+                this.model = {
+                    Id: 0,
+                    Name: "",
+                    Description: "",
+                    Price: 0,
+                    StockCount: 0,
+                    Type: "",
+                    Image: ""
+                };
+
+                $("#myModal").modal('hide');
+            },
+
+            edit(data) {
+                this.title = "修改菜品";
+                this.model = {
+                    Id: data.id,
+                    Name: data.name,
+                    Description: data.description,
+                    Price: data.price,
+                    StockCount: data.stockCount,
+                    Type: data.type,
+                    Image: data.image,
+                };
+
+                $("#myModal").modal('show');
+            },
+
+            deleteData(id) {
+               axios.post("/Food/Delete?id=" + id).then(res => {
+                    if (res.data.status == true) {
+                        alert("操作成功！");
+                        this.bindData();
+                    }
+                    else {
+                        alert("系统出错了！");
+                    }
+                });
+            },
+
+            submit() {
+                if (!this.model.Name || !this.model.Description || !this.model.Price
+                    || !this.model.StockCount || !this.model.Type) {
+                    alert("请完成所有信息！")
+                    return;
+                }
+
+                if (isNaN(parseFloat(this.model.Price))) {
+                    alert("价格必须是数字！")
+                    return;
+                }
+
+                 if (isNaN(parseFloat(this.model.StockCount))) {
+                    alert("库存必须是数字！")
+                    return;
+                }
+
+                var model = $.extend(true, {}, this.model);
+                var data = {
+                    Id: model.Id,
+                    Name: model.Name,
+                    Description: model.Description,
+                    Image: model.Image,
+                    Type: model.Type,
+                    Price: parseFloat(model.Price),
+                    StockCount: parseFloat(model.StockCount),
+                }
+
+                axios.post("/Food/AddFood", data).then(res => {
+                    if (res.data.status == true) {
+                        alert("操作成功！");
+                        this.close()
+                        this.bindData();
+                    }
+                    else {
+                        alert("系统出错了！");
+                    }
+                });
+            },
+
+            afterUploaded(res) {
+                if (res.success == true) {
+                    this.model.Image = res.fileName;
+                }
+                else {
+                    alert("系统出错，请重试！");
+                }
+            },
+
+            checkFile(evt) {
+                let msg = "";
+
+                let imgExt = /(\.|\/)(jpe|jpg|jpeg|bmp|png)$/i;
+                let hasError = evt.files.some(x => {
+                    if (!imgExt.test(x.extension))
+                        msg = "只能上传后缀为jpe|jpg|jpeg|bmp|png的图片";
+                    return msg.length !== 0;
+                });
+
+                if (hasError) alert(msg);
+            },
+
+            pageChange() {
+                this.bindData();
+            }
+        }
+    });
+</script>

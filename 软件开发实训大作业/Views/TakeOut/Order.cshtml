@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewData["Title"] = "外卖订单";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div id="app" style="margin-top: 50px;" class="row-fluid">    
+        <div class="span12">
+            <div class="well well_condition well-con" style="margin-top: 30px; margin-bottom: 13px;position: relative;">
+                <div class="span6">
+                    <div class="btn-group">
+                        <a class="btn again-btn taps-p">
+                            <span class="name-address">订单列表</span>
+                        </a>
+                    </div> »
+                    &nbsp;
+                </div>
+
+                <div class="span6 order_person dropdown" style="text-align:right;">
+                    <div style="text-align:left;padding-top: 5px; ">
+                        <ul class="tlist pull-right">
+                            <li id="zonghe0"><a href="http://www.leyu.net/jianli/search.php?areaid=0&amp;catid=0&amp;guzhubaozhang=0&amp;paixu=0" class="selected">综合<i></i></a></li>
+                            <li id="yuyue0"><a href="http://www.leyu.net/jianli/search.php?areaid=0&amp;catid=0&amp;guzhubaozhang=0&amp;paixu=1">预约量<i></i></a></li>
+                            <li id="jineng0"><a href="http://www.leyu.net/jianli/search.php?areaid=0&amp;catid=0&amp;guzhubaozhang=0&amp;paixu=3">技能经验<i></i></a></li>
+                            <li id="jiage0"><a href="http://www.leyu.net/jianli/search.php?areaid=0&amp;catid=0&amp;guzhubaozhang=0&amp;paixu=5">价格<i></i></a></li>
+                            <li><input type="checkbox" id="renzheng0" onclick="window.location.href='http://www.leyu.net/jianli/search.php?areaid=0&amp;catid=0&amp;guzhubaozhang=0&amp;paixu=0&amp;renzheng=1'">个人认证</li>
+                        </ul>
+                    </div>
+
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="well well_person">
+                <table class="table table-responsive table-bordered table-hover">
+                    <tr>
+                        <th>客户</th>
+                        <th>联系方式</th>
+                        <th>送货地址</th>
+                        <th>订单时间</th>
+                        <th>订单详情</th>
+                        <th>金额</th>
+                        <th>状态</th>
+                        <th>修改</th>
+                    </tr>
+                    <tr v-for="data in dataList">
+                        <td>{{data.name}}</td>
+                        <td>{{data.phone}}</td>
+                        <td>{{data.address}}</td>
+                        <td>{{data.createTime | dateFormat}}</td>
+                        <td><span v-for="food in data.foodDic">{{food.item1}} x{{food.item2}}</span></td>
+                        <td>{{data.price | formatCurrency}}</td>
+                        <td>
+                            <template v-if="!data.isEdit">
+                                {{data.status}}
+                            </template>
+                            <template v-else>
+                                <select class="input-small" v-model="data.status">
+                                    <option>已付款</option>
+                                    <option>已送餐</option>
+                                    <option>已完成</option>
+                                </select>
+                            </template>
+                        </td>
+                        <td>
+                            <template v-if="!data.isEdit">
+                                <button class="btn btn-primary" @@click="editStatus(data)">修改状态</button>
+                            </template>
+                            <template v-else>
+                                <button class="btn btn-success" @@click="save(data)">保存</button>
+                                <button class="btn btn-danger" @@click="cancel(data)">取消</button>
+                            </template>
+                        </td>
+                    </tr>
+                </table>
+
+                <pagination v-model="page" :total="total" :page-size="pageSize" @@input="pageChange()"></pagination>
+            </div>
+        </div>
+    </div>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {          
+            dataList: [],
+        
+            pageSize: 2,
+            page: 1,
+            total: 0,
+          
+            backup: ""          
+        },
+        mounted() {
+            this.bindData();
+        },
+
+        methods: {
+            bindData() {
+                var params = `pageNo=${this.page}&pageSize=${this.pageSize}`
+                axios.get(`/TakeOut/GetOrders?${params}`, {})
+                    .then(res => {
+                        if (res.data.status = true) {
+                            res.data.data.filter(x => {
+                            x.isEdit = false;
+                            });
+
+                            this.dataList = res.data.data;
+                            this.total = res.data.total;
+                        }
+                        else {
+                            alert("获取数据失败！");
+                        }
+                  })
+                  .catch((e) => {
+                    console.log('获取数据失败!');
+                  });
+            },
+
+            editStatus(data) {
+                data.isEdit = true;
+                this.backup = data.status;
+            },
+
+            cancel(item) {
+                item.isEdit = false;
+                item.status = this.backup;
+            },
+
+            save(item) {
+                if (item.status == this.backup) {
+                    alert("请修改状态后再提交！");
+                    return;
+                }
+
+                var parms = `id=${item.id}&status=${item.status}`
+                axios.post("/TakeOut/UpdateStatus?" + parms).then(res => {
+                    if (res.data.status == true) {
+                        this.bindData();
+                    }
+                    else {
+                        alert("系统出错了！");
+                    }
+                });
+            },
+
+            pageChange() {
+                this.bindData();
+            }
+        }
+    });
+</script>
