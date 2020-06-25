@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewData["Title"] = "购物车";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app" style="margin-top: 50px;" class="row-fluid">
+    <div class="span12">
+        <div class="well well_condition well-con" style="margin-top: 30px; margin-bottom: 13px;position: relative;">
+            <div class="span3">
+                <div class="btn-group">
+                    <a class="btn again-btn taps-p">
+                        <span class="name-address">我的预订</span>
+                    </a>
+                </div> »
+                &nbsp;
+            </div>
+
+            <div class="span9 order_person dropdown" style="text-align:right;">
+                <div style="text-align:left;padding-top: 5px; ">
+                    <ul class="tlist pull-right">
+                        <li>
+                            <button class="btn btn-success" @@click="submit()">结算提交</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+        <div class="well well_person">
+            <table class="table table-responsive table-bordered table-hover">
+                <tr>
+                    <th>序号</th>
+                    <th>菜名</th>
+                    <th>单价</th>
+                    <th>修改</th>
+                </tr>
+                <tr v-for="(data, i) in dataList">
+                    <td>{{data.id}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.price | formatCurrency}}</td>
+                    <td>
+                        <button class="btn btn-success" @@click="delete(i)">不要了</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>总额</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{totalPrice | formatCurrency}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            dataList: [],
+
+            user: '@User.Identity.Name'
+        },
+        mounted() {
+            this.dataList = JSON.parse(localStorage.getItem("myCart"));
+        },
+
+        computed: {
+            totalPrice() {
+                return (this.dataList || []).
+                    reduce((a, x) => a +  (x.price || 0), 0);
+            }
+        },
+
+        methods: {
+            delete(index) {
+                alert(0);
+                this.dataList.splice(index, 1);
+
+                localStorage.setItem("myCart", obj);
+            },
+
+
+            submit() {
+                if (!this.user) {
+                    alert("请先登录！");
+                    location.href = "/Login/Index";
+                }
+                if (this.dataList.length == 0) {
+                    alert("请先点单！");
+                }
+
+                var foodIds = "";
+                this.dataList.filter(x => foodIds += x.id + ",");
+                var params = `totalPrice=${this.totalPrice}&foodIds=${foodIds}`;
+                axios.post("/TakeOut/AddOrder?" + params).then(res => {
+                    if (res.data.status = "1") {
+                        alert("下单成功！");
+                        localStorage.setItem("myCart", null);
+                        location.href="/Home/Index"
+                    }
+                    else {
+                        alert("系统出错了！");
+                    }
+                });
+            }
+        }
+    });
+</script>

@@ -13,7 +13,6 @@ E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\ERestaurant.TagHelpe
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\ERestaurant.TagHelpers.output.cache
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\ERestaurant.RazorCoreGenerate.cache
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
-E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
@@ -133,3 +132,8 @@ E:\VS Working\.net core\ERestaurant\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.Co
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\ERestaurant.MvcApplicationPartsAssemblyInfo.cache
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\TakeOut\Order.cshtml.g.cs
 E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Food\FoodList.cshtml.g.cs
+E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Group\List.cshtml.g.cs
+E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Home\Cart.cshtml.g.cs
+E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Login\Change.cshtml.g.cs
+E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Login\Index.cshtml.g.cs
+E:\VS Working\.net core\ERestaurant\obj\Debug\netcoreapp3.1\Razor\Views\Login\Register.cshtml.g.cs

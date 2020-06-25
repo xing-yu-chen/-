@@ -49,7 +49,7 @@
                         <td>{{data.phone}}</td>
                         <td>{{data.address}}</td>
                         <td>{{data.createTime | dateFormat}}</td>
-                        <td><span v-for="food in data.foodDic">{{food.item1}} x{{food.item2}}</span></td>
+                        <td><span v-for="food in data.foodDic" style="display: block">{{food.item1}} x{{food.item2}}</span></td>
                         <td>{{data.price | formatCurrency}}</td>
                         <td>
                             <template v-if="!data.isEdit">
@@ -86,7 +86,7 @@
         data: {          
             dataList: [],
         
-            pageSize: 2,
+            pageSize: 15,
             page: 1,
             total: 0,
           

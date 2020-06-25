@@ -8,7 +8,7 @@ namespace ERestaurant.DAO
     {
         public DbSet<TakeOut> TakeOuts { get; set; }
         public DbSet<TakeOutAndFood> TakeOutAndFoods { get; set; }
-        public DbSet<Category> Categorys { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Food> Foods { get; set; }
 
@@ -36,16 +36,16 @@ namespace ERestaurant.DAO
 
             modelBuilder.Entity<TakeOutAndFood>().HasKey(x => x.Id);
 
-            modelBuilder.Entity<Category>().HasKey(x => x.Id);
-            modelBuilder.Entity<Category>().Property(x => x.Name).HasMaxLength(500);
+            modelBuilder.Entity<Group>().HasKey(x => x.Id);
+            modelBuilder.Entity<Group>().Property(x => x.Name).HasMaxLength(500);
 
-            modelBuilder.Entity<Category>().HasData(
-                new Category()
+            modelBuilder.Entity<Group>().HasData(
+                new Group()
                 {
                     Id = 1,
                     Name = "荤菜"
                 },
-                 new Category()
+                 new Group()
                  {
                      Id = 2,
                      Name = "素菜"

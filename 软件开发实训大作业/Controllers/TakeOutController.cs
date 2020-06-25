@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ERestaurant.DAO;
 using ERestaurant.DAO.Model;
 using ERestaurant.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERestaurant.Controllers
@@ -17,6 +18,7 @@ namespace ERestaurant.Controllers
             _db = dbContex;
         }
 
+        [Authorize(Roles = "1")]
         public IActionResult Order()
         {
             return View();
@@ -80,8 +82,14 @@ namespace ERestaurant.Controllers
             return Json(new { Status = _db.SaveChanges() > 0});
         }
 
-        public bool AddOrder(int userId, decimal totalPrice, string foodIds)
+
+        [Authorize]
+        public IActionResult AddOrder(decimal totalPrice, string foodIds)
         {
+            var userIdStr = User.Claims.SingleOrDefault(s => s.Type == "LoginId").Value;
+            int.TryParse(userIdStr, out int userId);
+            if (userId == 0) return Json(0);
+
             var order = new TakeOut()
             {
                 AccountId = userId,
@@ -93,11 +101,11 @@ namespace ERestaurant.Controllers
             _db.SaveChanges();
 
             var splitedIds = foodIds.Split(',');
-            var addedIds = new List<TakeOutAndFood>();
+            var addedFoods = new List<TakeOutAndFood>();
             foreach (var id in splitedIds)
             {
                 int.TryParse(id, out int foodId);
-                var added = addedIds.FirstOrDefault(x => x.FoodId == foodId);
+                var added = addedFoods.FirstOrDefault(x => x.FoodId == foodId);
                 if (added == null)
                 {
                     var orderFood = new TakeOutAndFood()
@@ -107,14 +115,16 @@ namespace ERestaurant.Controllers
                         Count = 1
                     };
                     _db.TakeOutAndFoods.Add(orderFood);
+                    addedFoods.Add(orderFood);
                 }
                 else
                 {
                     added.Count++;
                 }
             }
+             _db.SaveChanges();
 
-            return _db.SaveChanges() > 0;
+            return Json(1);
         }
     }
 }

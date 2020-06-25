@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewData["Title"] = "菜品类别";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app" style="margin-top: 50px;" class="row-fluid">
+    <div class="span12">
+        <div class="well well_condition well-con" style="margin-top: 30px; margin-bottom: 13px;position: relative;">
+            <div class="span6">
+                <div class="btn-group">
+                    <a class="btn again-btn taps-p">
+                        <span class="name-address">菜品类别</span>
+                    </a>
+                </div> »
+                &nbsp;
+            </div>
+
+            <div class="span6 order_person dropdown" style="text-align:right;">
+                <div style="text-align:left;padding-top: 5px; ">
+                    <ul class="tlist pull-right">
+                        <li>
+                            <button class="btn btn-success" @@click="add()">添加</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+        <div class="well well_person">
+            <table class="table table-responsive table-bordered table-hover">
+                <tr>
+                    <th>序号</th>
+                    <th>类别</th>
+                    <th>操作</th>
+                </tr>
+                <tr v-for="data in dataList">
+                    <td>{{data.id}}</td>
+                    <td>{{data.name}}</td>
+                    <td>
+                        <button class="btn btn-success" @@click="edit(data)">编辑</button>
+                        <button class="btn btn-danger" @@click="deleteData(data.id)">删除</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">名称:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm" v-model="model.Name" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" @@click="close()">关闭</button>
+                        <button type="button" class="btn btn-primary" @@click="submit()">提交</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            dataList: [],
+
+            backup: "",
+            title: "",
+
+            model: {
+                Id: 0,
+                Name: ""
+            },
+        },
+        mounted() {
+            this.bindData();
+        },
+
+        methods: {
+            bindData() {
+                axios.get(`/Group/GetGroups`)
+                    .then(res => {
+                        if (res.data.status == true) {
+                            this.dataList = res.data.data;
+                        }
+                        else {
+                            alert("获取数据失败！");
+                        }
+                  })
+                  .catch((e) => {
+                    console.log('获取数据失败!');
+                  });
+            },
+
+            add() {
+                this.title = "添加类别";
+
+                $("#myModal").modal('show');
+            },
+
+            close() {
+                this.model = {
+                    Id: 0,
+                    Name: ""
+                };
+
+                $("#myModal").modal('hide');
+            },
+
+            edit(data) {
+                this.title = "修改类别";
+                this.model = {
+                    Id: data.id,
+                    Name: data.name
+                };
+
+                $("#myModal").modal('show');
+            },
+
+            deleteData(id) {
+               axios.post("/Group/DeleteGroup?id=" + id).then(res => {
+                    if (res.data.status == true) {
+                        alert("删除成功！");
+                        this.bindData();
+                    }
+                    else {
+                        alert("系统出错了！");
+                    }
+                });
+            },
+
+            submit() {
+                if (!this.model.Name) {
+                    alert("类别名称不能为空！")
+                    return;
+                }
+                var data = {
+                    Id: this.model.Id,
+                    Name: this.model.Name,
+                }
+
+                axios.post("/Group/EditGroup", data).then(res => {
+                    if (res.data.status == true) {
+                        alert("添加成功！");
+                        this.close()
+                        this.bindData();
+                    }
+                    else {
+                        alert("系统出错了！");
+                    }
+                });
+            }
+        }
+    });
+</script>

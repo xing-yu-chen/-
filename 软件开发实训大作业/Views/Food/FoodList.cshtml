@@ -102,11 +102,7 @@
                                 <label class="col-sm-2 control-label">类别:</label>
                                 <div class="col-sm-4">
                                     <select class="form-control input-sm" v-model="model.Type">
-                                        <option>荤菜</option>
-                                        <option>素菜</option>
-                                        <option>酒水</option>
-                                        <option>水果</option>
-                                        <option>点心</option>
+                                        <option v-for="x in groups">{{x.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -146,7 +142,7 @@
         data: {
             dataList: [],
 
-            pageSize: 2,
+            pageSize: 10,
             page: 1,
             total: 0,
 
@@ -164,17 +160,20 @@
             },
 
             uploadUrl: "/Food/UploadFile",
+
+            groups: []
         },
         mounted() {
+            this.getGrops();
             this.bindData();
         },
 
         methods: {
             bindData() {
-                var queryString = `pageNo=${this.page}&pageSize=${this.pageSize}`
+                var queryString = `pageNo=${this.page}&pageSize=${this.pageSize}`;
                 axios.get(`/Food/GetFoodMenus?${queryString}`, {})
                     .then(res => {
-                        if (res.data.status = true) {
+                        if (res.data.status == true) {
                             this.dataList = res.data.data;
                             this.total = res.data.total;
                         }
@@ -185,6 +184,15 @@
                   .catch((e) => {
                     console.log('获取数据失败!');
                   });
+            },
+
+            getGrops() {
+                  axios.get(`/Group/GetGroups`)
+                    .then(res => {
+                        if (res.data.status == true) {
+                            this.groups = res.data.data;
+                        }
+                  })
             },
 
             add() {

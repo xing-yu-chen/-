@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,7 +30,11 @@
             padding-top: 0px;
         }
     </style>
+    <script>
+        var foods = [];
+    </script>
 </head>
+
 <body>
     <header>
         <div class="navbar navbar-fixed-top">
@@ -38,15 +44,39 @@
                     <a name="top" class="brand text_bnb_strong bnb_middle" href="" style="line-height:20px">ERestaurant</a>
                     <div class="nav-collapse collapse" style="height: 0px;">
                         <ul class="nav pull-left" style="margin-right: 0px;">
-                            <li class="divider-vertical"></li>
-                            <li class="dropdown"><a class="text_bnb_strong" href="/TakeOut/Order">外卖订单</a></li>
-                            <li class="divider-vertical"></li>
-                            <li class="dropdown"><a class="text_bnb_strong" href="/Food/FoodList">菜品管理</a></li>
-                            <li class="divider-vertical"></li>
-                            <li class="dropdown"><a class="text_bnb_strong" href="">分类管理</a></li>
-                            <li class="divider-vertical"></li>
+                            @if (User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value == "1")
+                            {
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/TakeOut/Order">外卖订单</a></li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Food/FoodList">菜品管理</a></li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Group/List">分类管理</a></li>
+                                <li class="divider-vertical"></li>
+                            }
+                            else
+                            {
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Home/Index">首页</a></li>
+                                <li class="divider-vertical"></li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Home/Cart">购物车</a></li>
+                                <li class="divider-vertical"></li>
+                            }
                         </ul>
-                        <ul class="nav pull-right" id="destoon_member"><li class="dropdown"><a href="">登录</a></li><li class="dropdown"><a href="">注册</a></li></ul>
+                        <ul class="nav pull-right" id="destoon_member">
+                            @if (string.IsNullOrEmpty(User.Identity.Name))
+                            {
+                                <li class="dropdown"><a href="/Login/Index">登录</a></li>
+                                <li class="dropdown"><a href="/Login/Register">注册</a></li>
+                            }
+                            else
+                            {
+                                <li class="dropdown"><a>欢迎你，@User.Identity.Name</a></li>
+                                <li class="dropdown"><a href="/Login/Change">修改密码</a></li>
+                                <li class="dropdown"><a href="/Login/Logout">退出</a></li>
+                            }
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -65,7 +95,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>  
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,240 @@
+﻿@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ERestaurant-会员中心</title>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="~/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/js/vue.min.js"></script>
+    <script type="text/javascript" src="~/js/axios.min.js"></script>
+</head>
+<body data-gr-c-s-loaded="true">
+<style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 1pc;
+            font-family: Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif!important;
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
+            line-height: 20px;
+            background-color: rgb(235, 236, 237);
+            padding-top: 0px;
+        }
+
+        <!--
+        .container {
+            width: 340px;
+            padding-top: 86px !important;
+        }
+
+        .btn-login {
+            height: 35px !important;
+        }
+
+        .mod-body {
+            background-color: #fff;
+            padding: 20px;
+            border-top: 1px solid #d8dee2;
+            border-radius: 5px;
+        }
+
+        .aw-reg-tips {
+            line-height: 15px;
+            background: #eef7fd;
+            border: 1px solid #cfdde6;
+            color: #999;
+        }
+
+        .aw-reg-err {
+            line-height: 28px;
+            background: #ffeaea;
+            border: 1px solid #e5c3c4;
+            color: #C00;
+        }
+
+        body0 {
+            background: url(http://www.leyu.net/file/yi/images/bglogin.jpg) no-repeat center top;
+            background-size: cover;
+        }
+
+        .nav-tabs > li {
+            width: 33.3%;
+            text-align: center;
+        }
+
+        .footer0, .footer0 li a {
+            font-size: 12px;
+        }
+
+    input {
+        width: 286px;
+    }
+
+        .shouji {
+            position: absolute;
+            top: 246px;
+            left: 20px;
+            z-index: 10;
+        }
+
+            .shouji .kuang01 {
+                border-radius: 2px;
+                zoom: 1;
+                color: #822926;
+                background-color: transparent;
+                padding: 0;
+                filter: none;
+            }
+
+            .shouji .kuang02 {
+                border-radius: 7px;
+                padding: 6px 12px;
+                background-color: #fff;
+                border: 1px solid #f68227;
+            }
+
+                .shouji .kuang02 em {
+                    bottom: -6px;
+                    position: absolute;
+                    width: 0;
+                    height: 0;
+                    border-color: rgba(255,255,255,0);
+                    border-color: transparent\0;
+                    _border-color: tomato;
+                    _filter: chroma(color=#ff6347);
+                    border-style: solid;
+                    overflow: hidden;
+                    left: 20px;
+                    border-top-color: #f68227;
+                    border-width: 6px 6px 0;
+                }
+
+                .shouji .kuang02 span {
+                    position: absolute;
+                    width: 0;
+                    height: 0;
+                    border-color: rgba(255,255,255,0);
+                    border-color: transparent\0;
+                    _border-color: tomato;
+                    _filter: chroma(color=#ff6347);
+                    border-style: solid;
+                    overflow: hidden;
+                    bottom: -5px;
+                    left: 20px;
+                    border-width: 6px 6px 0;
+                    border-top-color: #fff;
+                }
+
+        .yanzhengma {
+            top: 296px;
+        }
+
+        .jizhu {
+            padding-left: 10px;
+        }
+
+            .jizhu input[type="checkbox"] {
+                margin-left: 0px;
+            }
+
+        .dengru {
+            margin-top: 10px;
+        }
+        -->
+    </style>
+    <div class="container" style="position:relative" id="app">
+        <div class="row-fluid show-grid">
+            <div class="mod-body clearfix">
+                <div style="padding-top: 36px !important;  padding-bottom: 26px !important;" class="clearfix">
+
+                    <a href="#" class="pull-left"><img src="~/img/logo.png"></a>
+                    <h1 class="pull-left" style="font-size: 20px;display:inline-box;border-left:1px solid #ddd;padding-left:10px;margin-left:8px;">登录</h1>
+                </div>
+
+                <div class="">
+
+                    <ul class="nav nav-tabs" id="deng">
+                        <li class="active"><a href="#zhang">账号密码</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="zhang">
+                            <form>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <input class="btn-login" type="text" placeholder="用户名" v-model="username">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <input class="btn-login" type="password" placeholder="密码" v-model="password">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <label class="checkbox jizhu">
+                                            <input type="checkbox" name="cookietime" value="1" id="cookietime">记住我
+                                            <a href="#" title="找回密码" class="pull-right">找回密码</a>
+                                        </label>
+                                        <button type="button" @@click="login()"
+                                                class="btn btn-large btn-block btn-success dengru">登录</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="clear:both;"></div>
+                <br>
+                <div style="border-top: 1px solid #ddd;">
+                    <br>
+                    <a href="/Login/Register" title="注册新账号" class="pull-right">注册新账号</a>
+                </div>
+            </div>
+        </div>
+    </div>
+   <script>
+        var app = new Vue({
+            el: "#app",
+            data:{
+                username: '',
+                password: '',
+            },
+             methods: {
+                 login() {
+                     if (!this.username || !this.password) {
+                         alert("请输入用户名和密码!");
+                         return;
+                     }
+
+                     axios.post(`/Login/Login?user=${this.username}&password=${this.password}`)
+                         .then(res => {
+                             if (res.data == 0) {
+                                 alert("登陆失败，请重试！");
+                             }
+                             else {
+                                 if (res.data == "1") {
+                                     location.href = "/Food/FoodList";
+                                 }
+                                 else {
+                                     location.href = "/Home/Index";
+                                 }
+                             }
+                         });
+                 }
+            }
+        });
+   </script>
+</body>
+</html>
