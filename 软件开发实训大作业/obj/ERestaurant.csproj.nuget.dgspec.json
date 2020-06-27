@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\VS Working\\.net core\\ERestaurant\\ERestaurant.csproj": {}
+    "E:\\learngit\\learngit\\ERestaurant\\ERestaurant.csproj": {}
   },
   "projects": {
-    "E:\\VS Working\\.net core\\ERestaurant\\ERestaurant.csproj": {
+    "E:\\learngit\\learngit\\ERestaurant\\ERestaurant.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\VS Working\\.net core\\ERestaurant\\ERestaurant.csproj",
+        "projectUniqueName": "E:\\learngit\\learngit\\ERestaurant\\ERestaurant.csproj",
         "projectName": "ERestaurant",
-        "projectPath": "E:\\VS Working\\.net core\\ERestaurant\\ERestaurant.csproj",
-        "packagesPath": "C:\\Users\\Dwyane\\.nuget\\packages\\",
-        "outputPath": "E:\\VS Working\\.net core\\ERestaurant\\obj\\",
+        "projectPath": "E:\\learngit\\learngit\\ERestaurant\\ERestaurant.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "E:\\learngit\\learngit\\ERestaurant\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Dwyane\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -64,6 +61,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.2, 3.1.2]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -72,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

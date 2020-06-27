@@ -156,7 +156,7 @@
                     Name: this.model.Name,
                 }
 
-                axios.post("/Group/EditGroup", data).then(res => {
+                axios.post("/Group/EditGroup?id=" + this.model.Id + "&name=" + this.model.Name).then(res => {
                     if (res.data.status == true) {
                         alert("添加成功！");
                         this.close()
